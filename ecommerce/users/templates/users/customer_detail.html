@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Details{% endblock %}
+
+{% block stylesheet %}
+    <link rel='stylesheet' href="{% static 'users/css/vendor_detail.css' %}">
+    <link rel='stylesheet' href="{% static 'users/css/customer_details.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h1 class='title'>
+        {% if type == 'customer profile' %}
+            Your Details
+        {% elif type == 'vendor profile' %}
+            {{vendor.company_name}}
+        {% endif %}
+    </h1>
+    {% if type == 'customer profile' %}
+        <p class='greeting'>Hello {{user.first_name}} {{user.last_name}}</p>
+        <p class='container'>Your shipping address</p>
+    {% endif %}
+    <div class='center-background-box'>
+        {% if type == 'customer profile' %}
+            <div class='container shipping-container'>
+        {% elif type == 'vendor profile' %}
+            <div class='container vendor-info-container vendor-description-container'>
+        {% endif %}
+            {% if type == 'customer profile' %}
+                <p>{{shipping.street_address}}</p>
+                <p>{{shipping.city}}, {{shipping.state_district}} {{shipping.post_code}}</p>
+                <p>{{shipping.country}}</p>
+                <a class='btn blue-btn' href="{% url 'update_shipping' shipping.id %}">Update your address</a>
+            {% elif type == 'vendor profile' %}
+                <div>
+                    <p><strong class='strong'>Customer Service Email</strong>: {{vendor.customer_service_email}}</p>
+                    <p><strong class='strong'>Company Description</strong>: {{vendor.description}}</p>
+                </div>
+                    <a class='btn blue-btn' href="{% url 'update_vendor_profile' %}">Update Company Info</a>
+            {% endif %}
+        </div>
+        <div class='container shipping-container'>
+            {% if type == 'customer profile' %}
+                <p><strong class='strong'>Name</strong>: {{user.first_name}} {{user.last_name}}</p>
+            {% endif %}
+                <p><strong class='strong'>Username</strong>: {{user.username}}</p>
+                <p><strong class='strong'>Email</strong>: {{user.email}}</p>
+            <div class='center-background-box'>
+                {% if type == 'customer profile' %}
+                    <a class='btn blue-btn' href="{% url 'update_vendor_profile' %}">Update Account</a>
+                {% elif type == 'vendor profile' %}
+                    <a class='btn blue-btn' href="{% url 'update_vendor_user' %}">Update Account</a>
+                {% endif %}
+                <a class='btn blue-btn' href="{% url 'update_password' %}">Update Password</a>
+            </div>
+        </div>
+    </div>
+    {% if top_products %}
+        <div class='product-list-container'>
+            <h3>Top Selling Products</h3>
+            <ol class='product-list-container'>
+                {% for product in top_products %}
+                    <li>
+                        <a href="{% url 'product_detail' product_id=product.id %}" class='product-card'>
+                            <p class='product-link'>{{product.name}}</p>
+                            <p class='product-price'>{{product.price}}</p>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+    {% endif %}
+    {% if low_stock_products %}
+        <div class='product-list-container'>
+            <h3>Low Stock/Out of Stock Products</h3>
+            <ul class='product-list-container'>
+                {% for product in low_stock_products %}
+                    <li>
+                        <a class='product-card' href="{% url 'product_update' product_id=product.id %}">
+                            <p class='product-link'>{{product.name}}</p>
+                            <p class='product-price'>Stock Remaining: {{product.stock}}</p>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

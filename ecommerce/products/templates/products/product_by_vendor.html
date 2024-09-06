@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{vendor.company_name}} - All Products{% endblock %}
+
+{% block content %}
+    <div class='category-menu-background'>
+        <h2 class="menu-title">Categories</h2>
+        <ul class='category-menu'>
+            {% for category in categories %}
+                <li><a class='category-menu-item' href="{% url 'product_by_category' category_id=category.id%}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class='product-list-container'>
+        <h1 class='title'>{{vendor.company_name}} - All Products</h1>
+        <ul class='product-container'>
+            {% for product in products %}
+                <a href="{% url 'product_detail' product_id=product.id %}" class='product-link'>
+                    <li class='product-card'>
+                        <p class='product-name list-product-name'>{{ product.name }}</p>
+                        <p class='product-price list-product-price'>{{ product.price }}</p>
+                    </li>
+                </a>
+            {% endfor %}
+        <ul>
+    </div>
+    {% if products %}
+    <div class='page-controls'>
+        <span>
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            <span>
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+{% endblock %}

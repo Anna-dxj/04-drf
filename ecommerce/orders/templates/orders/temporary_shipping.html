@@ -1,0 +1,45 @@
+{% extends 'orders/make_payment.html' %}
+{% load static %}
+{% load filters %}
+
+{% block title %}Checkout | Shipping Address{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    {% if type == 'temporary shipping'%}
+        <h1>Enter Shipping Information</h1>
+        <p class='label'>It looks like you're not sending this to yourself. Enter the shipping address to whom you are:</p>
+    {% elif type == 'update default address' %}
+        <h1>Update Default Shipping Information</h1>
+        <p class='label'>Update your shipping information. This will update your default address!</p>
+    {% endif %}
+    <div class='center-background-box'>
+        {% if type == 'temporary shipping' %}
+        <form class='center-background-box container shipping-container' method="post" action="{% url 'temporary_shipping_form' order_id=order_id %}">
+        {% elif type == 'update default address' %}
+        <form class='container shipping-container center-background-box' method="post" action="{% url 'update_shipping_from_checkout' order_id=order_id %}">
+        {% endif %}
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <p class='label'>{{ field.label_tag }}</p>
+                        <div>
+                            {% for error in field.errors %}
+                                <p class='label warning-text'>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {{ field|add_field_class:'alnum-input' }}
+                </div>
+            {% endfor %}
+            <div class='center-background-box'>
+            <a class='btn red-btn' href='{% url "shipping_info_check" order_id=order_id %}'>Go back</a>
+            {% if type == 'temporary shipping' %}
+                <button type=submit class='btn blue-btn'>Confirm Shipping Address</button>
+            {% elif type == 'update default address' %}
+                <button type=submit class='btn blue-btn'>Update Address</button>
+            {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

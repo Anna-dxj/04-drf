@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{vendor.company_name}}{% endblock %}
+
+{% block stylesheet %}
+    <link rel='stylesheet' href="{% static 'users/css/vendor_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h2>{{vendor.company_name}}</h2>
+    <div class = 'desc-container product-list-container'>
+        <div class='container shipping-container vendor-description-container'>
+            <p>{{vendor.description}}</p>
+        </div>
+        <div class='container shipping-container'>
+            <p> Questions? Contact us! </p>
+            <a class='detail-vendor' href="mailto:{{vendor.email}}">{{ vendor.customer_service_email }}</a>
+        </div>
+    </div>
+    
+    {% if top_products %}
+    <div class='product-list-container'>
+        <h3>Top Selling Products</h3>
+        <ol class='product-list-container'>
+            {% for product in top_products %}
+                    <li>
+                        <a href="{% url 'product_detail' product_id=product.id %}" class='product-card'>
+                            <p class='product-link'>{{product.name}}</p>
+                            <p class='product-price'>{{product.price}}</p>
+                        </a>
+                    </li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+        <a class='detail-vendor' href="{%url 'product_by_vendor' vendor_id=vendor.id%}">See all products sold by {{vendor.company_name}}</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Previous Orders{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'orders/css/previous_order_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h1>Previous Orders</h1>
+    {% if order_details%}
+        {% for item in order_details %}
+        <div class='product-link'>
+            <h2>{{ item.order.order_date }}</h2>
+            <p class='order-info-tag'>{{item.total_items}} item(s) - {{item.total_sum}}</p>
+            {%if item.order.is_shipped%}
+            <p>Shipped on {{item.order.shipped_date}}</p>
+            {% else %}
+            <p>Not shipped</p>
+            {% endif %}
+            <ul class='order-detail-container'>
+                {% for detail in item.details %}
+                    <li class='order-detail-item'>
+                        <a href="{% url 'product_detail' detail.product.id %}" class='order-detail-product'>
+                            {{detail.quantity}} {{detail.product.name}} x{{detail.unit_price}}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        <div class="page-controls">
+            <span>
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span>
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No previous orders</p>
+    {% endif %}
+</div>
+{% endblock %}

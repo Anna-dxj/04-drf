@@ -1,0 +1,28 @@
+{% extends 'orders/make_payment.html' %}
+{% load static %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h1>Confirm Shipping</h1>
+    <p class='label'>Your current, default shipping address</p>
+    <div class='center-background-box'>
+        <a class='btn red-btn' href='{% url "cart" %}'>Back to Cart</a>
+    </div>
+    <div class='center-background-box'>
+        <div class='container shipping-container'>
+                <p class="shipping-info shipping-name">{{customer.user.first_name}} {{customer.user.last_name}}</p>
+                <p class="shipping-info">{{shipping.street_address}}</p>
+                <p class="shipping-info">{{shipping.city}}, {{shipping.state_district}} {{shipping.post_code}}</p>
+                <p class="shipping-info">{{shipping.country}}</p>
+        </div>
+    </div>
+    <div class='center-background-box'>
+        <p class='label'>Continue to payment with this shipping address?</p>
+    </div>
+    <div class='center-background-box'>
+        <a href='{% url "payment_form" order_id=order_id %}' class='btn blue-btn'>All good!</a>
+        <a href='{% url "update_shipping_from_checkout" order_id=order_id %}' class="btn red-btn">Update My Address</a>
+        <a href='{% url "temporary_shipping_form" order_id=order_id%}' class="btn red-btn">Ship to someone else</a>
+    </div>
+</div>
+{% endblock %}

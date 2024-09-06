@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+{% block title %}Confirm Delete | {{product.name}}{% endblock %}
+
+{% block stylesheet %}
+    <link rel='stylesheet' href="{% static 'products/css/product_confirm_delete.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h1>Confirm Delete</h1>
+    <div class='align-center'>
+        <form method="post" class="form-container-background">
+            {% csrf_token %}
+            <p>Are you sure you want to delete {{product.name}}? Delete {{product.name}} will remove it from all users' order histories.</p>
+            <div class='align-center btn-container'>
+                <button type="submit" class='btn red-btn'>Yes, delete</button>
+                <a href="{%url 'company_products' %}" class='btn blue-btn'>No, go back</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

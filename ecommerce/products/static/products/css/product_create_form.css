@@ -1,0 +1,38 @@
+:root {
+    --light_blue: #A3CEF1;
+    --light_blue-active: #7598b6;
+    --light_blue-highlight: #a3cef159;
+    --gray: #E7ECEF;
+    --magenta: #8E5572;
+    --purple: #443850;
+    --dark-blue: #1E2E2F;
+    --warning-background: #ff6e6eb2;
+    --warning-text: #ce1313c4;
+    --border-outline: #0000006e; 
+    --highlight: #ffffff7a;
+}
+
+.form-container-background {
+    background-color: var(--gray);
+    border-radius: 0.3rem;
+    padding: 3rem;
+    padding-bottom: 2.5rem;
+}
+
+.align-center {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    margin-bottom: 0; 
+    margin-top: 0.9rem;
+    text-decoration: none;
+}
+
+.alnum-input:focus {
+    font-size: 25px;
+    outline: none;
+    border-bottom: 2px solid var(--dark-blue);
+    width: 30rem;
+}

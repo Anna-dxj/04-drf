@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+{% block title %}
+    {% if type == 'update shipping' %}
+        Update Address
+    {% elif type == 'update user' or type == 'update vendor' %}
+        Upate User
+    {% elif type == 'update password' %}
+        Update Password
+    {% elif type == 'update company' %}
+        Update Company
+    {% endif %}
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel='stylesheet' href="{% static 'users/css/customer_update_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h1>
+        {% if type == 'update shipping' %}
+            Update Shipping Info
+        {% elif type == 'update user' or type == 'update vendor' %}
+            Update User Info
+        {% elif type == 'update password' %}
+            Update Password
+        {% elif type == 'update company' %}
+            Update Company Info
+        {% endif %}
+    </h1>
+    <div class='align-center'>
+        {% if type == 'update shipping' %}
+            <form class='form-container-background' method="post" action="{% url 'update_shipping' shipping_id=shipping.id%}">
+        {% elif type == 'update user' %}
+            <form class='form-container-background' method="post" action="{% url 'update_user_details' %}">
+        {% elif type == 'update password' %}
+            <form class='form-container-background' method="post" action="{% url 'update_password' %}">
+        {% elif type == 'update vendor' %}
+            <form class='form-container-background' method="post" action="{% url 'update_vendor_user' %}">
+        {% elif type == 'update company' %}
+            <form class='form-container-background' method="post" action="{% url 'update_vendor_profile' %}">
+        {% endif %}
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <p class='label'>{{field.label}}</p>
+                    {% if field.errors %}
+                        <div>
+                            {% for error in field.errors %}
+                                <p class='warning-text label'>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {{ field | add_field_class:'alnum-input' }}
+                </div>
+            {% endfor %}
+            <div class='align-center'>
+                <button type="submit" class='btn blue-btn'>Update</button>
+                {% if type == 'update vendor' or type == 'update company' %}
+                    <a class="btn red-btn" href='{% url "company_info" %}'>Go back</a>
+                {% else %}
+                    <a class="btn red-btn" href='{% url "customer_details" %}'>Go back</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

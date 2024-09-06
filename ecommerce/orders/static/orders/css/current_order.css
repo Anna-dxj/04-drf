@@ -1,0 +1,69 @@
+:root {
+    --light_blue: #A3CEF1;
+    --light_blue-active: #7598b6;
+    --light_blue-highlight: #a3cef159;
+    --gray: #E7ECEF;
+    --magenta: #8E5572;
+    --magenta-active: #693e54;
+    --purple: #443850;
+    --dark-blue: #1E2E2F;
+    --warning-background: #ff6e6eb2;
+    --warning-text: #ce1313c4;
+    --border-outline: #0000006e; 
+    --highlight: #ffffff7a;
+}
+
+.order-info-tag {
+    font-weight: 500; 
+    font-size: 17px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.align-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.btn-container {
+    padding-top:1rem;
+}
+
+.product-link:hover .num-input {
+    background: transparent;
+}
+
+.num-input {
+    border: none;
+    border-bottom: 2px solid var(--border-outline);
+    margin: 0.5rem;
+    padding: 0.2rem;
+    font-size: 15px;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+    width: 5rem;
+    font-weight: 500;
+    font-size: 17px;
+    transition: all 0.5s ease-in-out;
+}
+
+.num-input:hover {
+    border-bottom: 2px solid var(--dark-blue);
+}
+
+.num-input:focus {
+    font-size: 25px;
+    outline: none;
+    border-bottom: 2px solid var(--dark-blue);
+    width: 10rem;
+}
+
+.num-input::placeholder {
+    color: var(--border-light);
+    font-size: 17px;
+    font-weight: 300;
+}

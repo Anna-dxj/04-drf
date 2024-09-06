@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel='stylesheet' href="{% static 'products/css/company_products.css' %}">
+{% endblock %}
+
+{% block title %}
+    {% if type == 'low stock' %}
+        Company Products | Low Stock
+    {% elif type == 'no stock' %}
+        Company Products | No Stock
+    {% elif type == 'best selling' %}
+        Company Products | Best Selling
+    {% else %}
+        Company Products
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class='category-menu-background'>
+    <ul class='category-menu'>
+        <li>
+            <a class='category-menu-item' href="{% url 'company_low_stocks' %}">
+                Low Stock
+            </a>
+        </li>
+        <li>
+            <a class='category-menu-item' href="{% url 'company_out_of_stock' %}">
+                Out of Stock
+            </a>
+        </li>
+        <li>
+            <a class='category-menu-item' href="{% url 'company_best_selling' %}">
+                Best Selling
+            </a>
+        </li>
+    </ul>
+</div>
+<div class='product-list-container'>
+    <h1>
+    {% if type == 'low stock' %}
+        Company Products - Low Stock
+    {% elif type == 'no stock' %}
+        Company Products - No Stock
+    {% elif type == 'best selling' %}
+        Company Products - Best Selling
+    {% else %}
+        Company Products
+    {% endif %}
+    </h1>
+    {% if type == 'best selling' %}
+        <p>Total Revenue: ${{total_revenue}}</p>
+    {% endif %}
+    {% if products %}
+    <ul class='product-list-container'>
+        {% for product in products %}
+            <li class='product-card'>
+                <a href="{% url 'product_detail' product_id=product.id %}" class='product-link'>{{ product.name }}</a>
+                <div class='button-div'>
+                    <a href="{% url 'product_update' product_id=product.id %}" class='btn blue-btn'>Update</a>
+                    <a href="{% url 'product_delete' product_id=product.id %}" class='btn red-btn'>Delete</a>
+                </div>
+            </li>
+        {% endfor %}
+    <ul>
+    {% else %}
+        <p>No products</p>
+    {% endif %}
+    <div class='page-controls'>
+        <span>
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            <span>
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}

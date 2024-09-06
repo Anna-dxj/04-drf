@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} include the form to update quantity per item and delete item  {% endcomment %}
+
+{% block title %}Your Cart{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'orders/css/current_order.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h2 id="title">Your Cart</h2>
+    {% if not order_details %}
+        <p class='label'>Nothing is added to the order!</p>
+    {% endif %}
+    <ul class='product-container'>
+        {% for detail in order_details %}
+        <li class='product-link order-item'>
+            <div>
+                <p class='order-info-tag'>{{detail.product.name}} - {{detail.unit_price}}</p>
+                <p>{{detail.product.vendor.company_name}}<p>
+            </div>
+            <div class='align-center'>
+                <form action="{% url 'update_cart_item' detail.id %}" method="post">
+                    {% csrf_token %}
+                    {% if messages %}
+                    <div>
+                        {% for message in messages %}
+                        <p class='warning-text'>{{message}}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <label for='quantity'>Quantity:</label>
+                    <input class="num-input" type="number" name="quantity" value="{{detail.quantity}}" min="1" required>
+                    <button class='btn blue-btn' type="submit">Update</button>
+                </form>
+                <form action="{% url 'remove_cart_item' detail.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class='btn red-btn'>Remove</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <p class='order-info-tag'>Total ({{total_items}} items): {{total_sum}}</p>
+    {% if order_details %}
+    <p class='btn-container'>
+        <a href="{% url 'shipping_info_check' order_id=order.id %}" class='btn blue-btn'>Proceed to checkout</a>
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

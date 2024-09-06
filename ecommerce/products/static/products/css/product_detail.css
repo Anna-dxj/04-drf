@@ -1,0 +1,122 @@
+:root {
+    --light_blue: #A3CEF1;
+    --light_blue-highlight: #a3cef159;
+    --gray: #E7ECEF;
+    --magenta: #8E5572;
+    --purple: #443850;
+    --dark-blue: #1E2E2F;
+    --warning-background: #ff6e6eb2;
+    --warning-text: #ce1313c4;
+    --border-outline: #0000006e; 
+    --highlight: #ffffff7a;
+}
+.basic-info-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.detail-vendor {
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--magenta);
+    padding: 0.5rem;
+    transition: all 0.5s ease;
+}
+
+.detail-vendr:hover {
+    cursor: pointer;
+}
+
+.tag-container {
+    padding:0.5rem;
+}
+
+.detail-category-tag {
+    text-decoration: none; 
+    background-color: var(--gray);
+    border-radius: 0.3rem;
+    padding: 0.2rem;
+    margin: 0.3rem;
+    transition: all 0.5s ease;
+}
+
+.detail-category-tag:hover {
+    background-color: var(--light_blue-highlight);
+}
+
+.detail-category-tag:active {
+    color: var(--magenta);
+}
+
+.detail-vendor:active {
+    color: var(--dark-blue);
+}
+
+.detail-price {
+    font-size: 25px;
+    font-weight: 500;
+    margin-right: 10rem; 
+}
+
+.detail-container {
+    display: flex;
+    align-items: start;
+    justify-content: space-between
+}
+
+.detail-description {
+    margin: 0.5rem; 
+    padding: 0.5rem;
+    margin-right: 9rem;
+}
+
+.detail-add-form-container {
+    background-color: var(--gray);
+    border-radius: 0.3rem;
+    padding: 0.9rem;
+    margin-right: 9rem;
+}
+
+.align-center {
+    display: flex;
+    justify-content: center;
+}
+
+.inline {
+    display: flex;
+    align-items: center;
+}
+
+.low-stock-warning-tag {
+    background-color: var(--warning-background);
+    margin: 0.3rem;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+}
+
+label {
+    margin-right: 0.5rem;
+}
+
+.warning-text-format {
+    margin: 0.5rem;
+}
+
+.product-detail-container {
+    display: flex;
+    align-items: top;
+    justify-content: space-between;
+}
+
+.out-of-stock-container {
+    padding: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.out-of-stock-text {
+    font-weight: 600;
+}

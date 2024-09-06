@@ -1,0 +1,43 @@
+:root {
+    --light_blue: #A3CEF1;
+    --light_blue-active: #7598b6;
+    --light_blue-highlight: #a3cef159;
+    --gray: #E7ECEF;
+    --magenta: #8E5572;
+    --magenta-active: #693e54;
+    --purple: #443850;
+    --dark-blue: #1E2E2F;
+    --warning-background: #ff6e6eb2;
+    --warning-text: #ce1313c4;
+    --border-outline: #0000006e; 
+    --highlight: #ffffff7a;
+}
+
+.order-info-tag {
+    font-weight: 500; 
+    font-size: 17px;
+}
+
+.order-detail-container {
+    margin: 0.2rem;
+    padding: 0.2rem;
+}
+
+.order-detail-item {
+    margin: 0.5rem;
+}
+
+.order-detail-product {
+    text-decoration: none; 
+    transition: color 0.5s ease;
+}
+
+.order-detail-product:hover {
+    font-weight: 500; 
+    color: var(--magenta);
+}
+
+.order-detail-product:active{
+    font-weight: 500;
+    color: var(var(--magenta-active))
+}

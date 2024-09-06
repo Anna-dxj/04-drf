@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+{% block title %}{{product.name}}{% endblock %}
+
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'products/css/product_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class='category-menu-background'>
+        <h2 class="menu-title">Categories</h2>
+        <ul class='category-menu'>
+        {% for category in all_categories %}
+            <li><a class='category-menu-item' href="{% url 'product_by_category' category_id=category.id%}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+    </div>
+    <div class='product-list-container product-detail-container'>
+        <div>
+            <h2>{{product.name}}</h2>
+            <p><a class='detail-vendor' href="{% url 'vendor_details' product.vendor.id%}">{{product.vendor}}</a></p>
+            <p class='tag-container'>
+                {% for category in categories %}
+                {% comment %} view to see by category but later {% endcomment %}
+                    <a class='detail-category-tag' href="{% url 'product_by_category' category_id=category.id %}">{{category}}</a> 
+                {% endfor %}
+            </p>
+            <p class='detail-description'>{{product.description}}</p>
+        </div>
+        <div class='detail-container'>
+            {% if not customer.is_vendor and product.stock > 0 %}
+                <form class='detail-add-form-container' class=''method='post' action="{% url 'add_to_cart' product.id %}">
+                    <p class='detail-price'>{{product.price}}</p>
+                    {% if product.stock <= 50 %}
+                        <p class='warning-text'>Low stock!</p>
+                    {% endif %}
+                    {% csrf_token %}
+                    <div class='detail-add-form'>
+                        <div class='inline'>
+                            <label for="{{ add_to_cart_form.quantity.id_for_label }}">Quantity:</label>
+                            {% for field in add_to_cart_form %}
+                            {{ field | add_field_class:'alnum-input' }}
+                            {% endfor %}
+                        </div>
+                        {% if messages %}
+                            <div>
+                                {% for message in messages %}
+                                <p class='warning-text warning-text-format'>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class='align-center'>
+                        <button class='btn blue-btn' type="submit">Add to cart</button>
+                    </div>
+                </form>
+            {% elif product.stock <= 0 %}
+                <div class='detail-add-form-container out-of-stock-container'>
+                    <p class='warning-text out-of-stock-text'>Out of stock!</p>
+                    <p>Check back later to buy</p>
+                </div>
+            {% elif customer.is_vendor and product.stock > 0 %}
+                <div class='detail-add-form-container out-of-stock-container'>
+                        <p class='warning-text'>Low stock!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

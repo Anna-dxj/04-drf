@@ -1,0 +1,23 @@
+:root {
+    --light_blue: #A3CEF1;
+    --light_blue-highlight: #a3cef159;
+    --gray: #E7ECEF;
+    --magenta: #8E5572;
+    --purple: #443850;
+    --dark-blue: #1E2E2F;
+    --highlight: #ffffff7a;
+}
+
+.category-menu-target {
+    background-color: var(--gray);
+    text-decoration: none; 
+    font-weight: 500; 
+    background-color: var(--light_blue);
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    transition: all 0.5s ease;
+}
+
+.empty-category-warning {
+    padding: 0.5rem;
+}

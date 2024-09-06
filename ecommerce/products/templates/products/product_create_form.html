@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+{% block stylesheet %}
+    <link rel='stylesheet' href="{% static 'products/css/product_create_form.css' %}">
+{% endblock %}
+
+{% block title %}
+    {% if type == 'create product' %}
+        Add Product
+    {% elif type == 'update product' %}
+        Update Product | {{product.name}}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class='product-list-container'>
+    <h2>
+        {% if type == 'create product' %}
+            Create Product
+        {% elif type == 'update product' %}
+            Update {{product.name}}
+        {% endif %}
+    </h2>
+    <div class='align-center'>
+        {% if type == 'create product' %}
+            <form method="post" action="{% url 'product_create' %}" class="form-container-background">
+        {% elif type == 'update product' %}
+            <form method="post" action="{% url 'product_update' product_id=product.id %}" class="form-container-background">
+        {% endif %}
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <p class='label'>{{field.label_tag}}</p>
+                    {% if field.errors %}
+                        <div>
+                            {% for error in field.errors %}
+                                <p class='label warnning-text'>{{error}}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {{ field|add_field_class:'alnum-input' }}
+                </div>
+            {% endfor %}
+            <div class='align-center'>
+                <button type="submit" class='btn blue-btn'>
+                    {% if type == 'create product' %}
+                        Create
+                    {% elif type == 'update product' %}
+                        Update Product
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

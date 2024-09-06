@@ -1,0 +1,28 @@
+.product-card:hover.product-link {
+    background-color: transparent;
+}
+
+.product-link {
+    font-weight: 500;
+}
+
+.product-link:hover {
+    background-color: transparent;
+    color: var(--purple)
+}
+
+.product-link:active {
+    color: var(--magenta)
+}
+.product-card:hover {
+    background-color: var(--light_blue-highlight);
+}
+
+.product-card {
+    align-items: center;
+    border-radius: 0.3rem; 
+}
+
+.button-div {
+    padding-right: 0.5rem;
+}

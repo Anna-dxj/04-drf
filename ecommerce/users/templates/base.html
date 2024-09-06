@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=SUSE:wght@100..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block stylesheet %}{% endblock %}
+    <title>{% block title %}Ecommerce{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class='navbar'>
+                <div class='navbar-group'>
+                    <li><a class='nav-item' href="{%url 'all_products' %}">Home</a></li>
+                </div>
+                <div class='navbar-group'>
+                    {% if user.is_authenticated %}
+                        {% if not customer.is_vendor %}
+                            <li><a class='nav-item' href="{%url 'previous_orders' %}">Previous Orders</a></li>
+                            <li><a class='nav-item' href="{%url 'cart' %}">Cart</a></li>
+                        {% else %}
+                            <li><a class='nav-item' href="{%url 'product_create'%}">Add Product</a></li>
+                            <li><a class='nav-item' href="{%url 'company_products' %}">All {{ current_vendor.company_name }} Products</a></li>
+                        {% endif %}
+                        <li>|</li>
+                        {% if customer.is_vendor %}
+                            <li><a class='nav-item' href="{%url 'company_info' %}">{{ current_vendor.company_name }}</a></li>
+                        {% else %}
+                            <li><a class='nav-item' href="{%url 'customer_details' %}">{{customer.user.first_name }} {{customer.user.last_name}} </a></li>
+                        {% endif %}
+                        <li>|</li>
+                        <li>
+                            <form action="{%url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class='nav-item' id='logout-btn' type="submit">Logout</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a class='nav-item' id='login-btn' href="{% url 'login' %}">Login</a></li>
+                    {% endif %}
+                </div>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

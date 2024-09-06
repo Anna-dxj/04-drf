@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+{% load filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=SUSE:wght@100..800&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href="{% static 'orders/css/make_payment.css' %}">
+    {% block stylesheet %}{% endblock %}
+    <title>{% block title %}Checkout | Payment{% endblock %}</title>
+</head>
+<body>
+    <main class="product-list-container">
+        {% block content %}
+        <div class='product-list-container'>
+            <h1>Checkout</h1>
+            <div class='center-background-box'>
+                <form method="post" class='center-background-box container shipping-container' action="{% url 'payment_form' order_id=order_id %}">
+                    {% csrf_token %}
+                    <div class='center-background-box'>
+                        <div class='align-left'>
+                            <div class='label select-container'>
+                                <p><label for={{form.method.id}}>{{ form.method.label_tag }}</label></p>
+                                <div class='custom-select'>
+                                    {{ form.method }}
+                                </div>
+                            </div>
+                            <div>
+                                <p class='label'><label for="{{form.card_number.id}}">{{ form.card_number.label}} (no spaces):</label></p>
+                                {% if form.card_number.errors %}
+                                    {% for error in form.card_number.errors %}
+                                        <p class="label warning-text">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                {{ form.card_number|add_field_class:'alnum-input card-num-input' }}
+                            </div>
+                            <div>
+                                <p class='label'>Expiration</p>
+                                {% if form.card_experiation_month.errors %}
+                                    {% for error in form.card_experiation_month.errors %}
+                                        <p class="label warning-text">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if form.card_expiration_year.errors %}
+                                    {% for error in form.card_expiration_year.errors %}
+                                        <p class="label warning-text">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                <div class="exp-date-container ">
+                                    <div>
+                                        <label for="{{form.card_expiration_month.id}}"></label>
+                                        {{ form.card_expiration_month|add_field_class:'alnum-input date-input' }}
+                                    </div>
+                                    <p>/</p>
+                                    <div>
+                                        <label for="{{form.card_expiration_year.id}}"></label>
+                                        {{ form.card_expiration_year|add_field_class:'alnum-input date-input' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p class='label'><label for="{{form.card_cvc.id}}">{{form.card_cvc.label_tag}}</label></p>
+                                {% if form.card_cvc.errors %}
+                                    {% for error in form.card_cvc.errors %}
+                                        <p class="label warning-text">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                {{ form.card_cvc|add_field_class:'alnum-input cvc-input' }}
+                            </div>
+                        </div>
+                        <div class='billing-address-container'>
+                            <p class='label'>Enter the billing address:</p>
+                            {% for field in billing_address_form %}
+                            <div>
+                                <p class='label'><label for="{{field.id}}">{{field.label_tag}}</label></p>
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <p class="label warning-text">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                {{ field|add_field_class:'alnum-input' }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="submit" class='btn blue-btn'>Confirm payment!</button>
+                </form>
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+</body>
+</html>
