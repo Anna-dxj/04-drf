@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 # View own details (name, email address)
 # view for changing shipping address
 
+# vendor detail view to see other vendors
 class VendorDetailView(DetailView):
     model = Vendor
     template_name='users/vendor_detail.html'
@@ -37,6 +38,7 @@ class VendorDetailView(DetailView):
         vendor_id = self.kwargs.get('vendor_id')
         return get_object_or_404(Vendor, id=vendor_id)
 
+# own customer detail info 
 class CustomerDetails(LoginRequiredMixin, DetailView):
     model = Shipping
     template_name='users/customer_detail.html'
@@ -56,6 +58,7 @@ class CustomerDetails(LoginRequiredMixin, DetailView):
 
         return shipping
 
+# for updating default shipping
 class UpdateShippingView(LoginRequiredMixin, UpdateView):
     model = Shipping
     form_class = ShippingForm
@@ -71,6 +74,7 @@ class UpdateShippingView(LoginRequiredMixin, UpdateView):
         context['type'] = 'update shipping'
         return context 
 
+# for updating customer information 
 class UpdateUserView(LoginRequiredMixin, UpdateView):
     model: User
     form_class = UpdateUserForm
@@ -85,6 +89,7 @@ class UpdateUserView(LoginRequiredMixin, UpdateView):
         context['type'] = 'update user'
         return context
 
+# Update Vendor information 
 class UpdateVendorUserView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UpdateVendorForm
@@ -99,6 +104,7 @@ class UpdateVendorUserView(LoginRequiredMixin, UpdateView):
         context['type'] = 'update vendor'
         return context
 
+# new password
 class UpdatePasswordView(LoginRequiredMixin, View):
     template_name='users/customer_update_form.html'
 
@@ -133,7 +139,7 @@ class UpdatePasswordView(LoginRequiredMixin, View):
 
 
 
-
+# update default address from shipping menus 
 class UpdateShippingFromPurchase(LoginRequiredMixin, View):
     template_name='orders/temporary_shipping.html'
 
@@ -172,6 +178,7 @@ class UpdateShippingFromPurchase(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
+# profile for vendor 
 class CompanyProfile(View):
     template_name = 'users/customer_detail.html'
 
@@ -197,6 +204,7 @@ class CompanyProfile(View):
 
         return render(request, self.template_name, context)
 
+# update vendor information 
 class UpdateVendorProfile(UpdateView):
     model = Vendor
     form_class = VendorForm
@@ -214,6 +222,7 @@ class UpdateVendorProfile(UpdateView):
 
         return context
 
+# login 
 class CustomLoginView(LoginView):
     form_class = CustomLoginForm
     template_name = 'users/register.html'
@@ -231,6 +240,7 @@ class CustomLoginView(LoginView):
 
         return context
 
+# create user
 class CreateUser(View):
     def get(self, request):
         user_form = UserForm()
@@ -268,6 +278,7 @@ class CreateUser(View):
             }
             return render(request, 'users/register.html', context)
 
+# create customer
 class CreateCustomer(View):
     def get(self, request):
         shipping_form = CreateCustomerForm()
@@ -306,7 +317,7 @@ class CreateCustomer(View):
 
         return redirect(request, 'users/register.html', context)
 
-
+# create vendor 
 class CreateVendor(View):
     def get(self, request):
         vendor_form = VendorForm()

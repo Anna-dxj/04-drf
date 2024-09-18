@@ -25,7 +25,13 @@
                             <div class='label select-container'>
                                 <p><label for={{form.method.id}}>{{ form.method.label_tag }}</label></p>
                                 <div class='custom-select'>
-                                    {{ form.method }}
+                                    <select>
+                                    {% comment %} {{ form.method }} {% endcomment %}
+                                    <option value="" disabled selected>------</option>
+                                    {% for value, label in form.method.field.choices %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                             <div>
@@ -86,7 +92,10 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <button type="submit" class='btn blue-btn'>Confirm payment!</button>
+                    <div class='btn-container'>
+                        <a href="{% url 'shipping_info_check' order_id=order_id %}" class='btn red-btn'>Go Back</a>
+                        <button type="submit" class='btn blue-btn'>Confirm payment!</button>
+                    </div>
                 </form>
             </div>
         </div>

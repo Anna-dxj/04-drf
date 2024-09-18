@@ -16,6 +16,36 @@
         {% endfor %}
     </ul>
   </div>
+  {% if suggested_products %}
+    <div class='product-list-container'>
+      <h2 class='title'>Based off your browsing history, we think you'ld like...</h2>
+      <ul class='product-container'>
+        {% for product in suggested_products %}
+          <a href="{% url 'product_detail' product_id=product.id %}" class='product-link'>
+            <li class='product-card'>
+              <p class='product-name list-product-name'>{{ product.name }}</p>
+              <p class='product-price list-product-price'>{{ product.price }}</p>
+            </li>
+          </a>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  {% if top_viewed_products %}
+    <div class='product-list-container'>
+      <h2 class='title'>{{ user.first_name }}'s Most Viewed Products</h2>
+      <ul class='product-container'>
+        {% for product in top_viewed_products %}
+          <a href="{% url 'product_detail' product_id=product.id %}" class='product-link'>
+            <li class='product-card'>
+              <p class='product-name list-product-name'>{{ product.name }}</p>
+              <p class='product-price list-product-price'>{{ product.price }}</p>
+            </li>
+          </a>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
   <div class='product-list-container'>
     <h2 class='title'>All Products</h2>
     <ul class='product-container'>

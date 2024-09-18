@@ -12,12 +12,7 @@ from users.forms import ShippingForm
 from products.forms import AddToCartForm
 from users.models import Customer
 
-# Create your views here.
-
-# View order history
-# view details of order history
-# View current order/shopping cart
-
+# list of all previous orders 
 class PreviousOrderList(ListView):
     model = Order
     template_name = 'orders/previous_order_list.html'
@@ -56,6 +51,7 @@ class PreviousOrderList(ListView):
 
         return context
 
+# current cart detail info 
 class CurrentOrderDetail(DetailView):
     model = Order
     template_name = 'orders/current_order.html'
@@ -95,6 +91,7 @@ class CurrentOrderDetail(DetailView):
 
         return order
 
+# for past order details
 class OrderDetails(DetailView):
     model = Order
     template_name = 'current_order.html'
@@ -109,13 +106,25 @@ class OrderDetails(DetailView):
         order_id = self.kwargs.get('order_id')
         return get_object_or_404(Order, id=order_id, is_in_cart=True)
     
+# make payment with card
 class MakePaymentView(View):
     template_name = 'orders/make_payment.html'
 
     def get(self, request, *args, **kwargs):
-        form = CardForm()
-        billing_address_form = ShippingForm()
         order_id = kwargs.get('order_id')
+
+        billing_address = request.session.get('billing_address', {})
+        print('billing_address: ', billing_address)
+
+        form = CardForm()
+        billing_address_form = ShippingForm(initial={
+            'street_address': billing_address.get('street_adr', None),
+            'city': billing_address.get('city', None),
+            'state_district': billing_address.get('state_district', None),
+            'post_code': billing_address.get('post_code', None),
+            'country': billing_address.get('country', None)
+        })
+
         context = {
             'form': form,
             'billing_address_form': billing_address_form,
@@ -130,6 +139,14 @@ class MakePaymentView(View):
         order_id = kwargs.get('order_id')
 
         if form.is_valid() and billing_address_form.is_valid():
+            request.session['billing_address'] = {
+                'street_adr': billing_address_form.cleaned_data['street_address'],
+                'city': billing_address_form.cleaned_data['city'],
+                'state_district': billing_address_form.cleaned_data['state_district'],
+                'post_code': billing_address_form.cleaned_data['post_code'],
+                'country': billing_address_form.cleaned_data['country']
+            }
+
             order = get_object_or_404(Order, id=order_id)
             payment_id = form.cleaned_data['method']
             payment = get_object_or_404(Payment, id=payment_id)
@@ -152,12 +169,7 @@ class RemoveCartItem(View):
     def post(self, request, order_detail_id):
         order_detail = get_object_or_404(OrderDetail, id=order_detail_id)
 
-        product = order_detail.product
-        quantity = order_detail.quantity 
         order_detail.delete()
-
-        product.stock += quantity
-        product.save()
 
         return redirect('cart')
 
@@ -172,27 +184,20 @@ class UpdateCartQuantityView(View):
         previous_quantity = order_detail.quantity
         delta_quantity = new_quantity - previous_quantity
 
-        # checks if ultimately adding/removing stock 
         # if remnoving stock, check first if able to do so
         if delta_quantity > 0:
             if product.stock < delta_quantity:
                 messages.error(request, 'Not enough stock available')
                 return redirect('cart')
-            product.stock -= delta_quantity
-        # if adding stock, no need to do checks
-        else:
-            product.stock += abs(delta_quantity)
-        
-        product.save()
 
         order_detail.quantity = new_quantity
-        order_detail.unit_price = product.price
+        order_detail.unit_price = order_detail.product.price
         order_detail.save()
 
         return redirect('cart')
 
 
-
+# add item to cart
 class AddToCartView(View):
     def post(self, request, product_id):
         form = AddToCartForm(request.POST)
@@ -210,25 +215,25 @@ class AddToCartView(View):
                 is_in_cart = True
             )
 
-            order_detail, created = OrderDetail.objects.get_or_create(
-                order=order,
-                product=product,
-                defaults={'quantity': 0, 'unit_price':product.price}
-            )
-
-            if not created:
+            try: 
+                order_detail = OrderDetail.objects.get(order=order, product=product)
                 order_detail.quantity += quantity
-            else:
-                order_detail.quantity = quantity 
+                order_detail.unit_price = product.price
+                order_detail.save()
             
-            order_detail.save()
+            except OrderDetail.DoesNotExist:
+                order_detail = OrderDetail.objects.create(
+                    order = order,
+                    product = product,
+                    quantity = quantity,
+                    unit_price = product.price
+                )
 
-            product.stock -= quantity
-            product.save()
-
-            return redirect('cart')
+            finally: 
+                return redirect('cart')
         return redirect('product_detail', product_id=product_id)
 
+# for temporary shipping form 
 class TemporaryShippingView(View):
     template_name = 'orders/temporary_shipping.html'
 
@@ -263,6 +268,7 @@ class TemporaryShippingView(View):
         
         return render(request, self.template_name, context)
 
+# default shipping info from payment screen 
 class ShippingAddressView(DetailView):
     model = Shipping
     template_name = 'orders/confirm_shipping.html'

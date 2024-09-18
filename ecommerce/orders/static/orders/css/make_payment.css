@@ -253,3 +253,9 @@ a {
 .billing-address-container {
     margin-left: 4rem;
 }
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -43,7 +43,9 @@ class CardForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['method'].choices = [(method.id, method.method) for method in Payment.objects.all()]
+        self.fields['method'].choices = [
+            (method.id, method.method) for method in Payment.objects.all()
+        ]
 
 class TemporaryShippingForm(forms.ModelForm):
     recipient_first_name = forms.CharField(

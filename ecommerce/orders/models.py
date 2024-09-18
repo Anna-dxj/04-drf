@@ -3,12 +3,7 @@ from django.utils import timezone
 from products.models import Product
 from users.models import Customer
 
-# NEED TO MIGRATE
 
-# CREATE TABLE payments(
-#     id SERIAL PRIMARY KEY,
-#     method VARCHAR(50)
-# );
 class Payment(models.Model):
     method = models.CharField(50)
 
