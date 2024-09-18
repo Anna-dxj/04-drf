@@ -26,7 +26,6 @@
                                 <p><label for={{form.method.id}}>{{ form.method.label_tag }}</label></p>
                                 <div class='custom-select'>
                                     <select>
-                                    {% comment %} {{ form.method }} {% endcomment %}
                                     <option value="" disabled selected>------</option>
                                     {% for value, label in form.method.field.choices %}
                                         <option value="{{ value }}">{{ label }}</option>
