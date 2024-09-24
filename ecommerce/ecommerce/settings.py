@@ -74,9 +74,11 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online'
         },
         'EMAIL_AUTHENTICATION': True,
+        # 'OAUATH_PKCE_ENABLED': True,
     }
 }
 
+# ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
