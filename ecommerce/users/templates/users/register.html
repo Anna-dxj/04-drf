@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 {% load static %}
 {% load filters %}
+{% load socialaccount %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +14,7 @@
     <title>
             {% if type == 'login' %}
                 Login
-            {% elif type == 'user creation' %}
+            {% elif type == 'user creation' or type == 'social user creation' %}
                 Register | User Creation
             {% elif type == 'vendor profile creation' %}
                 Register | Vendor Profile
@@ -27,7 +29,7 @@
             <h1>
             {% if type == 'login' %}
                 Login
-            {% elif type == 'user creation' %}
+            {% elif type == 'user creation' or type == 'social user creation' %}
                 Create User
             {% elif type == 'vendor profile creation' %}
                 Create Vendor Profile
@@ -45,6 +47,8 @@
                     <form method="post" action="{% url 'create_vendor' %}" class='center-background-box container shipping-container'>
                     {% elif type == 'customer profile creation' %}
                     <form method="post" action="{% url 'create_customer' %}" class='center-background-box container shipping-container'>
+                    {% elif type == 'social user creation' %}
+                    <form method='post' action="{% url 'register_user_info' %}" class='center-background-box container shipping-container'>
                     {% endif %}
                         {% csrf_token %}
                         {% if type == 'customer profile creation' %}
@@ -95,7 +99,7 @@
                         <button type="submit" class="btn blue-btn">
                             {% if type == 'login' %}
                                 Login
-                            {% elif type == 'user creation' %}
+                            {% elif type == 'user creation' or type == 'social user creation'%}
                                 Continue
                             {% else %}
                                 Complete Registration
@@ -105,10 +109,14 @@
                     {% if type == 'user creation' or type == 'login' %}
                         <div class='center-background-box link-container'>
                             {% if type == 'user creation' %}
-                                <p>Already have an account? <a href="{%url 'login' %}" class='link'>Login</a><p>
+                                <p>Already have an account? <a href="{%url 'login' %}" class='link'>Login</a></p>
                             {% elif type == 'login' %}
-                                <p>Don't have an account? <a href="{%url 'register'%}" class='link'>Register</a><p>
+                                <p>Don't have an account? <a href="{%url 'register'%}" class='link'>Register</a></p>
                             {% endif %}
+                        </div>
+                        <div class='center-background-box link-container align-items'>
+                            <p>Or login with <a href="{% provider_login_url 'google' %}" class='link'>Google</a></p>
+                            </div>
                         </div>
                     {% endif %}
                 </div>

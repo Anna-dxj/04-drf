@@ -1,0 +1,64 @@
+{% load i18n %}
+{% load allauth %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=SUSE:wght@100..800&display=swap" rel="stylesheet">
+        <link rel='stylesheet' href="{% static 'css/socialaccount/login.css' %}">
+
+        <title>
+            {% block head_title %}
+                {% trans "Sign In" %}
+            {% endblock head_title %}
+        </title>
+        {% block extra_head %}
+        {% endblock extra_head %}
+    </head>
+    <body>
+        {% block body %}
+        <div class='product-list-container'>
+            <div class='center-screeen'>
+                {% if messages %}
+                    <div>
+                        <strong>{% trans "Messages:" %}</strong>
+                        <ul>
+                            {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {% block content %}
+                    <div class='center-background-box'>
+                        {% if process == "connect" %}
+                            {% element h1 %}
+                                {% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}
+                            {% endelement %}
+                            {% element p %}
+                                {% blocktrans with provider.name as provider %}You are about to connect a new third-party account from {{ provider }}.{% endblocktrans %}
+                            {% endelement %}
+                        {% else %}
+                        <div class='shipping-container'>
+                            <h1>Sign In Via {{ provider.name }}</h1>
+                            <div class='desc-container'>
+                                <p>You are about to sign in using a third-party account from {{ provider.name }}.</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <form method="post" no_visible_fields=True>
+                            {% csrf_token %}
+                            <button class='btn blue-btn' type="submit">Continue</button>
+                        </form>
+                        <p class='login-desc'>Already have an account? <a href="{%url 'login' %}" class='link'>Login</a></p>
+                    </div>
+                {% endblock content %}
+            </div>
+        </div>
+        {% endblock body %}
+        {% block extra_body %}
+        {% endblock extra_body %}
+    </body>
+</html>

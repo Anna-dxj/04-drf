@@ -28,10 +28,14 @@
             <div class='container vendor-info-container vendor-description-container'>
         {% endif %}
             {% if type == 'customer profile' %}
+                {% if shipping %}
                 <p>{{shipping.street_address}}</p>
                 <p>{{shipping.city}}, {{shipping.state_district}} {{shipping.post_code}}</p>
                 <p>{{shipping.country}}</p>
                 <a class='btn blue-btn' href="{% url 'update_shipping' shipping.id %}">Update your address</a>
+                {% else %}
+                <p>No shipping yet</p>
+                {%endif %}
             {% elif type == 'vendor profile' %}
                 <div>
                     <p><strong class='strong'>Customer Service Email</strong>: {{vendor.customer_service_email}}</p>
@@ -48,7 +52,7 @@
                 <p><strong class='strong'>Email</strong>: {{user.email}}</p>
             <div class='center-background-box'>
                 {% if type == 'customer profile' %}
-                    <a class='btn blue-btn' href="{% url 'update_vendor_profile' %}">Update Account</a>
+                    <a class='btn blue-btn' href="{% url 'update_user_details' %}">Update Account</a>
                 {% elif type == 'vendor profile' %}
                     <a class='btn blue-btn' href="{% url 'update_vendor_user' %}">Update Account</a>
                 {% endif %}

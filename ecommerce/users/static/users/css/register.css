@@ -289,3 +289,12 @@ input[type=checkbox] {
 .customer-shipping-container {
     margin-left: 0.5rem; 
 }
+
+.align-items {
+    display: flex;
+    align-items: center;
+}
+
+.social-link-container {
+    margin-left: 0.6rem;
+}

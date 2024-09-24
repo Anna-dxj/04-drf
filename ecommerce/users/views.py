@@ -54,8 +54,11 @@ class CustomerDetails(LoginRequiredMixin, DetailView):
     
     def get_object(self, queryset=None):
         customer = get_object_or_404(Customer, user=self.request.user)
-        shipping = get_object_or_404(Shipping, customer=customer)
-
+        try: 
+            shipping = Shipping.objects.get(customer=customer)
+        except Shipping.DoesNotExist:
+            shipping = Shipping.objects.create(customer=customer)
+    
         return shipping
 
 # for updating default shipping

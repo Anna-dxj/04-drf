@@ -1,0 +1,123 @@
+:root {
+    --light_blue: #A3CEF1;
+    --light_blue-active: #7598b6;
+    --light_blue-highlight: #a3cef159;
+    --gray: #E7ECEF;
+    --magenta: #8E5572;
+    --purple: #443850;
+    --dark-blue: #1E2E2F;
+    --warning-background: #ff6e6eb2;
+    --warning-background-highlight: #ff6e6e75;
+    --warning-text: #ce1313c4;
+    --warning-active: #8f0c0cc4;
+    --border-light: #0000007c; 
+    --border-outline: #0000001f; 
+    --highlight: #ffffff7a;
+
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+body {
+    color: var(--dark-blue);
+    padding: 0;
+    margin: 0;
+}
+
+header {
+    padding: 0.5rem;
+    background-color: var(--light_blue);
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'SUSE', Helvetica, sans-serif;
+    padding: 0;
+    margin: 0
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li, p {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: var(--dark-blue);
+}
+
+.btn {
+    border: none;
+    border-radius: 0.3rem; 
+    background-color: transparent;
+    margin: 0.3rem;
+    padding: 0.5rem; 
+    font-weight: 600; 
+    text-decoration: none;
+    transition: all 0.5s ease;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: var(--highlight);
+    cursor: pointer;
+}
+
+.blue-btn {
+    background-color: var(--light_blue);
+    transition: all 0.5s ease;
+}
+
+.blue-btn:hover {
+    background-color: var(--light_blue-highlight);
+}
+
+.center-background-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem; 
+    align-items: center;
+    flex-direction: column;
+}
+
+.center-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.product-list-container {
+    padding: 0.9rem;
+    margin: 0.3rem;
+}
+
+.link {
+    text-decoration: none;
+    border-radius: 0.3rem;
+    color: var(--purple);
+    font-weight: 500;
+    transition: all 0.5s ease;
+}
+
+.desc-container {
+    padding: 0.5rem; 
+}
+
+.shipping-container {
+    background-color: var(--gray);
+    border-radius: 0.3rem; 
+    display: flex;
+    width: auto;
+    flex-direction: column; 
+    align-items: center;
+    padding: 5rem;
+    margin: 1rem 0; 
+}
+
+.login-desc {
+    margin: 0.3rem; 
+}
