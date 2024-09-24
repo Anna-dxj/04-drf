@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'products',
     'users',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -80,6 +84,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 LOGIN_REDIRECT_URL = 'all_products'
+ACCOUNT_LOGIN_REDIRECT_URL = 'all_products'
 
 ROOT_URLCONF = 'ecommerce.urls'
 

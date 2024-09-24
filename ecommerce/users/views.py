@@ -297,7 +297,7 @@ class CreateCustomer(View):
         return render(request, 'users/register.html', context)
 
     def post(self, request):
-        shipping_form = ShippingForm(request.POST)
+        shipping_form = CreateCustomerForm(request.POST)
 
         if shipping_form.is_valid():
             user = request.user

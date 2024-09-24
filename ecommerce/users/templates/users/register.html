@@ -64,7 +64,7 @@
                             <div class='customer-shipping-container' >
                                 {% for field in shipping_fields %}
                                     <div>
-                                        <p class='label'>{{ field.label_tag }}<p>
+                                        <p class='label'>{{ field.label_tag }}</p>
                                         {{ field|add_field_class:'alnum-input' }}
 
                                     </div>
@@ -116,8 +116,10 @@
                         </div>
                         <div class='center-background-box link-container align-items'>
                             <p>Or login with <a href="{% provider_login_url 'google' %}" class='link'>Google</a></p>
-                            </div>
                         </div>
+                    {% endif %}
+                    {% if type == 'login' %}
+                        <a href="{% url 'account_reset_password' %}" class='link'>Forgot Password?</a>
                     {% endif %}
                 </div>
             </div>
