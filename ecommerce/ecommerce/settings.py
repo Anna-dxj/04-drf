@@ -43,32 +43,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',    
-    'django.contrib.sites',
-    'allauth', 
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',    
-    'rest_framework',
-    'rest_framework.authtoken',
     'orders',
     'products',
     'users',
-    'api',
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ]
-}
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -92,9 +70,11 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online'
         },
         'EMAIL_AUTHENTICATION': True,
+        # 'OAUATH_PKCE_ENABLED': True,
     }
 }
 
+# ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
