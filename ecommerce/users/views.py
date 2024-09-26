@@ -12,13 +12,9 @@ from .forms import CreateCustomerForm, ShippingForm, UserForm, VendorForm, Custo
 from products.models import Product
 from django.contrib.auth.models import User
 
-
-# Create your views here.
-# View own details (name, email address)
-# view for changing shipping address
-
 # vendor detail view to see other vendors
 class VendorDetailView(DetailView):
+    """Vendor details, including their top five products. Publici view."""
     model = Vendor
     template_name='users/vendor_detail.html'
     context_object_name = 'vendor'
@@ -28,7 +24,7 @@ class VendorDetailView(DetailView):
         vendor = self.object
         
         top_products = Product.objects.filter(vendor=vendor).annotate(
-            total_sales=Sum('OrderDetails__quantity')
+            total_sales=Sum('order_details__quantity')
         ).order_by('-total_sales')[:5]
         context['top_products'] = top_products
 
@@ -40,6 +36,7 @@ class VendorDetailView(DetailView):
 
 # own customer detail info 
 class CustomerDetails(LoginRequiredMixin, DetailView):
+    """Displays customer information. Customer but non-vendor view"""
     model = Shipping
     template_name='users/customer_detail.html'
     context_object_name = 'shipping'
@@ -63,6 +60,7 @@ class CustomerDetails(LoginRequiredMixin, DetailView):
 
 # for updating default shipping
 class UpdateShippingView(LoginRequiredMixin, UpdateView):
+    """Update default shipping information from profile settings. Customer but non-vendor view."""
     model = Shipping
     form_class = ShippingForm
     template_name='users/customer_update_form.html'
@@ -79,6 +77,7 @@ class UpdateShippingView(LoginRequiredMixin, UpdateView):
 
 # for updating customer information 
 class UpdateUserView(LoginRequiredMixin, UpdateView):
+    """Update user information. Customer view."""
     model: User
     form_class = UpdateUserForm
     template_name='users/customer_update_form.html'
@@ -94,6 +93,7 @@ class UpdateUserView(LoginRequiredMixin, UpdateView):
 
 # Update Vendor information 
 class UpdateVendorUserView(LoginRequiredMixin, UpdateView):
+    """Update vendor information. Vendor View."""
     model = User
     form_class = UpdateVendorForm
     template_name = 'users/customer_update_form.html'
@@ -109,6 +109,7 @@ class UpdateVendorUserView(LoginRequiredMixin, UpdateView):
 
 # new password
 class UpdatePasswordView(LoginRequiredMixin, View):
+    """Associates a customer with a new password. Customer view."""
     template_name='users/customer_update_form.html'
 
     def get(self, request, *args, **kwargs):
@@ -144,6 +145,7 @@ class UpdatePasswordView(LoginRequiredMixin, View):
 
 # update default address from shipping menus 
 class UpdateShippingFromPurchase(LoginRequiredMixin, View):
+    """Update default shipping information, but from the payment templates. Customer non vendor veiw."""
     template_name='orders/temporary_shipping.html'
 
     def get(self, request, *args, **kwargs):
@@ -183,6 +185,7 @@ class UpdateShippingFromPurchase(LoginRequiredMixin, View):
 
 # profile for vendor 
 class CompanyProfile(View):
+    """Shows vendor's own details, as well as low stock and top selling products. Vendor view."""
     template_name = 'users/customer_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -190,7 +193,7 @@ class CompanyProfile(View):
         vendor = get_object_or_404(Vendor, profile=customer)
 
         top_products = Product.objects.filter(vendor=vendor).annotate(
-            total_sales=Sum('OrderDetails__quantity')
+            total_sales=Sum('order_details__quantity')
         ).filter(total_sales__gt=0).order_by('-total_sales')[:5]
 
         low_stock_products = Product.objects.filter(
@@ -209,6 +212,7 @@ class CompanyProfile(View):
 
 # update vendor information 
 class UpdateVendorProfile(UpdateView):
+    """Update vendor information. Vendor view."""
     model = Vendor
     form_class = VendorForm
     template_name = 'users/customer_update_form.html'
@@ -227,6 +231,7 @@ class UpdateVendorProfile(UpdateView):
 
 # login 
 class CustomLoginView(LoginView):
+    """Handles log in."""
     form_class = CustomLoginForm
     template_name = 'users/register.html'
 
@@ -245,6 +250,7 @@ class CustomLoginView(LoginView):
 
 # create user
 class CreateUser(View):
+    """Creates a user instance."""
     def get(self, request):
         user_form = UserForm()
         context = {
@@ -283,6 +289,7 @@ class CreateUser(View):
 
 # create customer
 class CreateCustomer(View):
+    """Creates a non-vendor customer"""
     def get(self, request):
         shipping_form = CreateCustomerForm()
 
@@ -322,6 +329,7 @@ class CreateCustomer(View):
 
 # create vendor 
 class CreateVendor(View):
+    """Creates a vendor"""
     def get(self, request):
         vendor_form = VendorForm()
         

@@ -14,6 +14,7 @@ from users.models import Customer
 
 # list of all previous orders 
 class PreviousOrderList(ListView):
+    """Lists overview of all previous orders. Customer non vendor view"""
     model = Order
     template_name = 'orders/previous_order_list.html'
     context_object_name = 'orders'
@@ -53,6 +54,7 @@ class PreviousOrderList(ListView):
 
 # current cart detail info 
 class CurrentOrderDetail(DetailView):
+    """Displays all cart items, the sum of order price, and the total number of items. Customer non-vendor view."""
     model = Order
     template_name = 'orders/current_order.html'
     context_object_name = 'order'
@@ -93,6 +95,7 @@ class CurrentOrderDetail(DetailView):
 
 # for past order details
 class OrderDetails(DetailView):
+    """Shows past order details. Customer non-vendor view"""
     model = Order
     template_name = 'current_order.html'
     context_object_name = 'order'
@@ -108,6 +111,7 @@ class OrderDetails(DetailView):
     
 # make payment with card
 class MakePaymentView(View):
+    """Handles form logic for making a payment, particularly handling payment and billing information. Customer non vendor view"""
     template_name = 'orders/make_payment.html'
 
     def get(self, request, *args, **kwargs):
@@ -166,6 +170,7 @@ class MakePaymentView(View):
         
 # remove cart
 class RemoveCartItem(View):
+    """Removes order detail from cart. Customer non vendor view"""
     def post(self, request, order_detail_id):
         order_detail = get_object_or_404(OrderDetail, id=order_detail_id)
 
@@ -176,6 +181,7 @@ class RemoveCartItem(View):
 
 # update cart
 class UpdateCartQuantityView(View):
+    """Updates the quantity of order detail item. Customer non vendor view"""
     def post(self, request, order_detail_id):
         order_detail = get_object_or_404(OrderDetail, id=order_detail_id)
         product = order_detail.product
@@ -199,6 +205,7 @@ class UpdateCartQuantityView(View):
 
 # add item to cart
 class AddToCartView(View):
+    """Adds an item to cart. Customer non vendor view"""
     def post(self, request, product_id):
         form = AddToCartForm(request.POST)
         if form.is_valid():
@@ -235,6 +242,7 @@ class AddToCartView(View):
 
 # for temporary shipping form 
 class TemporaryShippingView(View):
+    """Handles form logic for temporary shipping for current order. If left empty, order address is default. Customer non vendor view."""
     template_name = 'orders/temporary_shipping.html'
 
     def get(self, request, *args, **kwargs):
@@ -270,6 +278,7 @@ class TemporaryShippingView(View):
 
 # default shipping info from payment screen 
 class ShippingAddressView(DetailView):
+    """Handles form for default shipping from payment forms. Customer non vendor view"""
     model = Shipping
     template_name = 'orders/confirm_shipping.html'
     context_object_name = 'shipping'

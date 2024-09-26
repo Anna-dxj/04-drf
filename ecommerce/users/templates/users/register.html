@@ -116,8 +116,10 @@
                         </div>
                         <div class='center-background-box link-container align-items'>
                             <p>Or login with <a href="{% provider_login_url 'google' %}" class='link'>Google</a></p>
-                            </div>
                         </div>
+                    {% endif %}
+                    {% if type == 'login' %}
+                        <a href="{% url 'account_reset_password' %}" class='link center-background-box'>Forgot Password?</a>
                     {% endif %}
                 </div>
             </div>

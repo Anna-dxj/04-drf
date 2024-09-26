@@ -1,6 +1,17 @@
-from django.urls import path
-from .views import AllProductsView, ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView, ProductByVendorList, VendorOwnProductList, ProductByCategory, LowStockProductsView, OutOfStockProductsView, BestSeillingByVendorProductsView
-
+from django.urls import path, include 
+from .views import (
+    AllProductsView, 
+    ProductDetailView, 
+    ProductCreateView, 
+    ProductUpdateView, 
+    ProductDeleteView, 
+    ProductByVendorList, 
+    VendorOwnProductList, 
+    ProductByCategory, 
+    LowStockProductsView, 
+    OutOfStockProductsView, 
+    BestSeillingByVendorProductsView,
+)
 from .decorators import vendor_required
 
 urlpatterns = [

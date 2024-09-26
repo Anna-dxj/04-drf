@@ -6,17 +6,60 @@ from .models import Product,Category
 from .forms import ProductForm, AddToCartForm
 from users.models import Vendor, Customer
 from django.db.models import Sum, F, FloatField, ExpressionWrapper
+# from rest_framework import viewsets, status
+# from .serializers import ProductSerializer, CategorySerializer
+# from users.permissions import IsVendorOrReadOnly, IsAdminOrReadOnly
+# from rest_framework.permissions import IsAdminUser, AllowAny
+# from rest_framework.exceptions import PermissionDenied
+# from rest_framework.response import Response
+# import logging 
 
+# logger = logging.getLogger(__name__)
 
-# Create your views here.
-# add a product & add product to category (form)
-# edit product & category (form)
-# view all products
-# view products by category (if time)
-# view specific product 
+# # api viewset for category for product: 
+# class ProductViewSet(viewsets.ModelViewSet):
+#     """Viewset for products object. All read operations can be done by anyone, but a vendor is only able to create, update, delete their own products"""
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#     permission_classes = [IsVendorOrReadOnly]
+
+#     def handle_exception(self, exc):
+#         if isinstance(exc, PermissionDenied):
+#             return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
+#         return super().handle_exception(exc)
+    
+#     def perform_create(self, serializer):
+#         vendor = Vendor.objects.get(profile__user=self.request.user)
+#         serializer.save(vendor = vendor)
+    
+#     def perform_update(self, serializer):
+#         product = self.get_object()
+#         print('product: ', product)
+#         if product.vendor.profile.user != self.request.user:
+#             return PermissionDenied('You do not have permission to update this.')
+#         serializer.save()
+    
+#     def perform_destroy(self, instance):
+#         if instance.vendor.profile != self.request.user:
+#             return Response({'detail': 'You do not have permission to delete this product.'}, status=status.HTTP_403_FORBIDDEN)
+#         instance.delete()
+
+# # api viewset for category
+# class CategoryViewSet(viewsets.ModelViewSet):
+#     """Viewset for categories object. All read operations can be done by anyone, but create, update, delete operations limited to admin users"""
+#     queryset = Category.objects.all()
+#     serializer_class = CategorySerializer
+#     permission_classes = [IsAdminOrReadOnly]
+
+#     def handle_exception(self, exc):
+#         if isinstance(exc, PermissionDenied):
+#             return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
+#         return super().handle_exception(exc)
+
 
 # view all products
 class AllProductsView(ListView):
+    """List all in-stock products and all categories. Public view. If a user is logged in, also lists top five most viewed products from current session, as well as suggested products based on categories they frequent"""
     model = Product
     template_name = 'products/all_products.html'
     context_object_name = 'products'
@@ -54,7 +97,7 @@ class AllProductsView(ListView):
         suggested_products = Product.objects.filter(
             category__in=categories
         ).annotate(
-            total_units_sold=Sum('OrderDetails__quantity')
+            total_units_sold=Sum('order_details__quantity')
         ).order_by('-total_units_sold')[:10]
         print(suggested_products)
 
@@ -65,6 +108,7 @@ class AllProductsView(ListView):
 
 # product detail
 class ProductDetailView(DetailView):
+    """Lists details of product, the form to add to cart, and product category. Public view"""
     model = Product
     template_name = 'products/product_detail.html'
     context_object_name = 'product'
@@ -114,6 +158,7 @@ class ProductDetailView(DetailView):
 
 # product by category
 class ProductByCategory(ListView):
+    """List all products by category name, public view"""
     model = Product
     template_name = 'products/product_by_category.html'
     context_object_name = 'products'
@@ -134,6 +179,7 @@ class ProductByCategory(ListView):
 
 # product by vendor 
 class ProductByVendorList(ListView):
+    """Lists all products by vendor, public view"""
     model = Product
     template_name = 'products/product_by_vendor.html'
     context_object_name = 'products'
@@ -153,6 +199,7 @@ class ProductByVendorList(ListView):
 
 # vendor can see their own products
 class VendorOwnProductList(ListView):
+    """Lists products by vendor. Vendor view"""
     model = Product
     template_name = 'products/company_products.html'
     context_object_name = 'products'
@@ -167,6 +214,7 @@ class VendorOwnProductList(ListView):
 
 # create product view
 class ProductCreateView(CreateView):
+    """Creates products. Vendor view."""
     model = Product
     form_class = ProductForm
     template_name = 'products/product_create_form.html'
@@ -189,6 +237,7 @@ class ProductCreateView(CreateView):
 
 # update product info 
 class ProductUpdateView(UpdateView):
+    """Update product info. Vendor view."""
     model = Product
     fields = ['name', 'price', 'stock', 'description']
     template_name = 'products/product_create_form.html'
@@ -206,6 +255,7 @@ class ProductUpdateView(UpdateView):
 
 # delete a product
 class ProductDeleteView(DeleteView):
+    """Deletes a product. Vendor view."""
     model = Product
     template_name='products/product_confirm_delete.html'
     success_url = reverse_lazy('company_products')
@@ -213,6 +263,7 @@ class ProductDeleteView(DeleteView):
 
 # all products with low stock for vendor
 class LowStockProductsView(ListView):
+    """Lists all low stock products. Vendor view."""
     model = Product
     template_name = 'products/company_products.html'
     context_object_name = 'products'
@@ -244,6 +295,7 @@ class LowStockProductsView(ListView):
 
 # all products with low stock for vendor 
 class OutOfStockProductsView(ListView):
+    """Lists all out of stock products. Vendor View."""
     model = Product
     template_name = 'products/company_products.html'
     context_object_name = 'products'
@@ -274,6 +326,7 @@ class OutOfStockProductsView(ListView):
 
 # all products by best selling for vendor 
 class BestSeillingByVendorProductsView(ListView):
+    """List all best-selling products. Vendor View."""
     model = Product
     template_name = 'products/company_products.html'
     context_object_name = 'products'
@@ -288,7 +341,7 @@ class BestSeillingByVendorProductsView(ListView):
         context['type'] = 'best selling'
         total_amount = Product.objects.filter(vendor=vendor).annotate(
             total_amount= ExpressionWrapper(
-                F('OrderDetails__quantity') * F('OrderDetails__unit_price'), 
+                F('order_details__quantity') * F('order_details__unit_price'), 
                 output_field = FloatField()
             )
         ).aggregate(
@@ -306,7 +359,7 @@ class BestSeillingByVendorProductsView(ListView):
         vendor = get_object_or_404(Vendor, profile=customer)
 
         queryset = Product.objects.filter(vendor=vendor).annotate(
-            total_sales=Sum('OrderDetails__quantity')
+            total_sales=Sum('order_details__quantity')
         ).order_by('-total_sales')
 
         return queryset

@@ -62,7 +62,7 @@ class CustomerAdmin(admin.ModelAdmin):
         payment = Order.objects.filter(customer=obj).aggregate(
             total_amount = Sum(
                 ExpressionWrapper(
-                    F('OrderDetails__quantity') * F('OrderDetails__unit_price'),
+                    F('order_details__quantity') * F('order_details__unit_price'),
                     output_field=FloatField()
                 )
             )

@@ -5,7 +5,7 @@ from users.models import Customer
 
 
 class Payment(models.Model):
-    method = models.CharField(50)
+    method = models.CharField(max_length=100)
 
     def __str__(self):
         return self.method
@@ -47,8 +47,8 @@ class SpecialShipping(models.Model):
 class OrderDetail(models.Model):
     quantity = models.IntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='OrderDetails')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='OrderDetails')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_details')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_details')
 
     def __str__(self):
         return f'{self.product}({self.order}) x{self.quantity}'
