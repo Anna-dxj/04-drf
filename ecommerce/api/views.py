@@ -1,20 +1,24 @@
-from rest_framework import viewsets, status
-from .serializers import ProductSerializer, CategorySerializer, VendorSerializer, CustomerSerializer, UserSerializer, ShippingSerializer, OrderSerializer, OrderDetailSerializer, SpecialShippingSerializer, PaymentSerializer
-from .permissions import IsVendorOrReadOnly, IsAdminOrReadOnly, IsOwner
-from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.response import Response
-from products.models import Product, Category
-from orders.models import Order, SpecialShipping, OrderDetail, Payment
-from users.models import Vendor, Customer, Shipping
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.utils import timezone
+from django_filters.rest_framework import DjangoFilterBackend
+from orders.models import Order, SpecialShipping, OrderDetail, Payment
+from products.models import Product, Category
+from .permissions import IsVendorOrReadOnly, IsAdminOrReadOnly, IsOwner
+from rest_framework import viewsets, status, generics, filters
+from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from .serializers import ProductSerializer, CategorySerializer, VendorSerializer, CustomerSerializer, UserSerializer, ShippingSerializer, OrderSerializer, OrderDetailSerializer, SpecialShippingSerializer, PaymentSerializer
+from users.models import Vendor, Customer, Shipping
 
 class PaymentViewSet(viewsets.ModelViewSet):
     """Viewset for payment methods. All users able to read, but only admin able to create, update, delete"""
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     permission_classes = [IsAdminOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    pagination_class = None
     
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -22,6 +26,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes=[IsOwner]
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -72,6 +77,8 @@ class OrderDetailViewSet(viewsets.ModelViewSet):
     queryset = OrderDetail.objects.all()
     serializer_class = OrderDetailSerializer
     permission_classes=[IsOwner]
+    throttle_classes = [UserRateThrottle]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -115,6 +122,9 @@ class SpecialShippingViewSet(viewsets.ModelViewSet):
     queryset = SpecialShipping.objects.all()
     serializer_class = SpecialShippingSerializer
     permission_classes=[IsOwner]
+    throttle_classes = [UserRateThrottle]
+    pagination_class = None
+    
 
     def get_queryset(self):
         if self.request.user.is_staff: 
@@ -159,6 +169,8 @@ class ShippingViewSet(viewsets.ModelViewSet):
     queryset = Shipping.objects.all()
     serializer_class = ShippingSerializer
     permission_classes = [IsOwner]
+    throttle_classes = [UserRateThrottle]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff: 
@@ -184,6 +196,8 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsOwner]
+    throttle_classes = [UserRateThrottle]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -209,6 +223,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     permission_classes = [IsOwner]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -234,6 +249,16 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsVendorOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle] 
+    filter_backends = [
+	    DjangoFilterBackend, 
+	    filters.SearchFilter, 
+	    filters.OrderingFilter
+	]
+    filterset_fields = ['category', 'vendor']
+    search_fields = ['name', 'description']
+    ordering_fields = ['price']
+    ordering = ['price']
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
@@ -262,6 +287,15 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    pagination_class = None
+    filter_backends = [
+	    filters.SearchFilter, 
+	    filters.OrderingFilter
+	]
+    search_fields = ['name']
+    ordering_fields = ['name']
+    ordering = ['name']    
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
@@ -274,7 +308,14 @@ class VendorViewSet(viewsets.ModelViewSet):
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
     permission_classes = [IsVendorOrReadOnly]
-
+    throttle_classes = [UserRateThrottle, AnonRateThrottle] 
+    filter_backends = [
+	    filters.SearchFilter, 
+	    filters.OrderingFilter
+	]
+    search_fields = ['company_name', 'description']
+    ordering_fields = ['company_name']
+    ordering = ['company_name']
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
             return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)

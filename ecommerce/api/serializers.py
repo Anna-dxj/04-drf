@@ -50,6 +50,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta: 
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'is_staff', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+    
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user()
 
     
 
@@ -59,7 +68,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class ProductSerializer(serializers.ModelSerializer):
-    vendor = serializers.SerializerMethodField() 
+    vendor = VendorSerializer() 
     category = CategorySerializer(many=True)
 
     class Meta:
