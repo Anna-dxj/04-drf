@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,7 +43,9 @@ INSTALLED_APPS = [
     'allauth', 
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',    
+    'allauth.socialaccount.providers.google', 
+    'rest_framework',
+    'oauth2_provider',
     'orders',
     'products',
     'users',
@@ -62,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware'
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -80,6 +84,18 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated'
+    ),
+}
 
 LOGIN_REDIRECT_URL = 'all_products'
 ACCOUNT_LOGIN_REDIRECT_URL = 'all_products'
