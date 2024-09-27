@@ -1,14 +1,15 @@
-from rest_framework import viewsets, status
-from .serializers import ProductSerializer, CategorySerializer, VendorSerializer, CustomerSerializer, UserSerializer, ShippingSerializer, OrderSerializer, OrderDetailSerializer, SpecialShippingSerializer, PaymentSerializer
-from .permissions import IsVendorOrReadOnly, IsAdminOrReadOnly, IsOwner
-from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.response import Response
-from products.models import Product, Category
-from orders.models import Order, SpecialShipping, OrderDetail, Payment
-from users.models import Vendor, Customer, Shipping
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.utils import timezone
+from orders.models import Order, SpecialShipping, OrderDetail, Payment
+from products.models import Product, Category
+from .permissions import IsVendorOrReadOnly, IsAdminOrReadOnly, IsOwner
+from rest_framework import viewsets, status
+from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .serializers import ProductSerializer, CategorySerializer, VendorSerializer, CustomerSerializer, UserSerializer, ShippingSerializer, OrderSerializer, OrderDetailSerializer, SpecialShippingSerializer, PaymentSerializer
+from users.models import Vendor, Customer, Shipping
 
 class PaymentViewSet(viewsets.ModelViewSet):
     """Viewset for payment methods. All users able to read, but only admin able to create, update, delete"""
