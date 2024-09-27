@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.utils import timezone
+from django_filters.rest_framework import DjangoFilterBackend
 from orders.models import Order, SpecialShipping, OrderDetail, Payment
 from products.models import Product, Category
 from .permissions import IsVendorOrReadOnly, IsAdminOrReadOnly, IsOwner
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics, filters
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.response import Response
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
@@ -249,6 +250,15 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsVendorOrReadOnly]
     throttle_classes = [UserRateThrottle, AnonRateThrottle] 
+    filter_backends = [
+	    DjangoFilterBackend, 
+	    filters.SearchFilter, 
+	    filters.OrderingFilter
+	]
+    filterset_fields = ['category', 'vendor']
+    search_fields = ['name', 'description']
+    ordering_fields = ['price']
+    ordering = ['price']
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
@@ -279,6 +289,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
     pagination_class = None
+    filter_backends = [
+	    filters.SearchFilter, 
+	    filters.OrderingFilter
+	]
+    search_fields = ['name']
+    ordering_fields = ['name']
+    ordering = ['name']    
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
@@ -292,7 +309,13 @@ class VendorViewSet(viewsets.ModelViewSet):
     serializer_class = VendorSerializer
     permission_classes = [IsVendorOrReadOnly]
     throttle_classes = [UserRateThrottle, AnonRateThrottle] 
-
+    filter_backends = [
+	    filters.SearchFilter, 
+	    filters.OrderingFilter
+	]
+    search_fields = ['company_name', 'description']
+    ordering_fields = ['company_name']
+    ordering = ['company_name']
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
             return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)

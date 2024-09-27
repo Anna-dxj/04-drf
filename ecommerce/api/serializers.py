@@ -59,7 +59,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class ProductSerializer(serializers.ModelSerializer):
-    vendor = serializers.SerializerMethodField() 
+    vendor = VendorSerializer() 
     category = CategorySerializer(many=True)
 
     class Meta:

@@ -2,8 +2,6 @@ from rest_framework import permissions
 from products.models import Product
 from users.models import Vendor
 
-# allow vendors to create, update, delete their own information. everyoen else is read only 
-
 class IsVendorOrReadOnly(permissions.BasePermission):
     """Allows vendors to perform crud operations on their own information and products, but only grants read access to non-vendors."""
     def has_permission(self, request, view):

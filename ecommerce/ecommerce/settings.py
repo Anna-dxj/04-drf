@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google', 
     'rest_framework',
+    'django_filters',
     'oauth2_provider',
     'orders',
     'products',
     'users',
+    'api',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
