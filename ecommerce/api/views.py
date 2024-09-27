@@ -17,6 +17,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
     permission_classes = [IsAdminOrReadOnly]
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    pagination_class = None
     
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -76,6 +77,7 @@ class OrderDetailViewSet(viewsets.ModelViewSet):
     serializer_class = OrderDetailSerializer
     permission_classes=[IsOwner]
     throttle_classes = [UserRateThrottle]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -120,6 +122,7 @@ class SpecialShippingViewSet(viewsets.ModelViewSet):
     serializer_class = SpecialShippingSerializer
     permission_classes=[IsOwner]
     throttle_classes = [UserRateThrottle]
+    pagination_class = None
     
 
     def get_queryset(self):
@@ -166,6 +169,7 @@ class ShippingViewSet(viewsets.ModelViewSet):
     serializer_class = ShippingSerializer
     permission_classes = [IsOwner]
     throttle_classes = [UserRateThrottle]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff: 
@@ -192,6 +196,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsOwner]
     throttle_classes = [UserRateThrottle]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -217,6 +222,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     permission_classes = [IsOwner]
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -272,6 +278,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    pagination_class = None
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
