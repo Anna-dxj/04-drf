@@ -6,8 +6,8 @@ from products.models import Product, Category
 from .permissions import IsVendorOrReadOnly, IsAdminOrReadOnly, IsOwner
 from rest_framework import viewsets, status
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from .serializers import ProductSerializer, CategorySerializer, VendorSerializer, CustomerSerializer, UserSerializer, ShippingSerializer, OrderSerializer, OrderDetailSerializer, SpecialShippingSerializer, PaymentSerializer
 from users.models import Vendor, Customer, Shipping
 
@@ -16,6 +16,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     permission_classes = [IsAdminOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
     
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -23,6 +24,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes=[IsOwner]
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -73,6 +75,7 @@ class OrderDetailViewSet(viewsets.ModelViewSet):
     queryset = OrderDetail.objects.all()
     serializer_class = OrderDetailSerializer
     permission_classes=[IsOwner]
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -116,6 +119,8 @@ class SpecialShippingViewSet(viewsets.ModelViewSet):
     queryset = SpecialShipping.objects.all()
     serializer_class = SpecialShippingSerializer
     permission_classes=[IsOwner]
+    throttle_classes = [UserRateThrottle]
+    
 
     def get_queryset(self):
         if self.request.user.is_staff: 
@@ -160,6 +165,7 @@ class ShippingViewSet(viewsets.ModelViewSet):
     queryset = Shipping.objects.all()
     serializer_class = ShippingSerializer
     permission_classes = [IsOwner]
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         if self.request.user.is_staff: 
@@ -185,6 +191,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsOwner]
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -235,6 +242,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsVendorOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle] 
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
@@ -263,6 +271,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
@@ -275,6 +284,7 @@ class VendorViewSet(viewsets.ModelViewSet):
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
     permission_classes = [IsVendorOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle] 
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
